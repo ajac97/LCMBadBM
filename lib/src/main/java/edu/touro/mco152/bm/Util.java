@@ -52,6 +52,14 @@ public class Util {
      * @return Integer between min and max, inclusive.
      * @see java.util.Random#nextInt(int)
      */
+
+    /**
+     * I changed the line that returns to return the result of rand.next(min - max) instead of (max-min). This breaks the unit test assocaited with
+     * this method.
+     * @param min
+     * @param max
+     * @return
+     */
     public static int randInt(int min, int max) {
 
         // Usually this can be a field rather than a method variable
@@ -60,7 +68,7 @@ public class Util {
         // nextInt is normally exclusive of the top value,
         // so add 1 to make it inclusive
 
-        return rand.nextInt((max - min) + 1) + min;
+        return rand.nextInt((min - max) + 1) + min;
     }
 
     /*
