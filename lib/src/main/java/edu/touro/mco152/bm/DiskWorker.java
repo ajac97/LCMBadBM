@@ -38,6 +38,10 @@ import static edu.touro.mco152.bm.DiskMark.MarkType.WRITE;
  * Swing using an instance of the DiskMark class.
  */
 
+/**
+ * Changed DiskWorker to no longer extend SwingWorker. Instead, it takes in a concrete implementation of the User
+ *Platform interface to decide how to display the results of the BenchMark.
+ */
 public class DiskWorker {
 
     UserPlatform up;

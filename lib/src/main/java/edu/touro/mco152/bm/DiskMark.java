@@ -3,7 +3,7 @@ package edu.touro.mco152.bm;
 import java.text.DecimalFormat;
 
 /**
- *
+ *Changed DiskMark class to no longer be hardcoded for SwingWorker, instead Worker is now a variable of type UserPlatform.
  */
 public class DiskMark {
 
