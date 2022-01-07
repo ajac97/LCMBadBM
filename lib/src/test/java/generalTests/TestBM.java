@@ -1,3 +1,5 @@
+package generalTests;
+
 import edu.touro.mco152.bm.App;
 import edu.touro.mco152.bm.DiskMark;
 import edu.touro.mco152.bm.DiskWorker;
@@ -128,4 +130,5 @@ public class TestBM implements UserPlatform {
             App.dataDir.mkdirs(); // create data dir if not already present
         }
     }
+
 }

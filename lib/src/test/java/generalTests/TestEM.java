@@ -1,3 +1,5 @@
+package generalTests;
+
 import edu.touro.mco152.bm.persist.EM;
 import jakarta.persistence.EntityManager;
 import org.eclipse.persistence.jpa.jpql.Assert;

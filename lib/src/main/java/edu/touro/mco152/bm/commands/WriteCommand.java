@@ -1,28 +1,10 @@
 package edu.touro.mco152.bm.commands;
 
-import edu.touro.mco152.bm.App;
-import edu.touro.mco152.bm.DiskMark;
-import edu.touro.mco152.bm.Util;
+
 import edu.touro.mco152.bm.persist.DiskRun;
-import edu.touro.mco152.bm.persist.EM;
-import edu.touro.mco152.bm.ui.Gui;
+
 import edu.touro.mco152.bm.ui.UserPlatform;
 import edu.touro.mco152.bm.workers.WriteWorker;
-import jakarta.persistence.EntityManager;
-
-import javax.swing.*;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import static edu.touro.mco152.bm.App.*;
-import static edu.touro.mco152.bm.App.msg;
-import static edu.touro.mco152.bm.DiskMark.MarkType.READ;
-import static edu.touro.mco152.bm.DiskMark.MarkType.WRITE;
 
 public class WriteCommand implements CommandInterface {
     private int numOfMarks;
