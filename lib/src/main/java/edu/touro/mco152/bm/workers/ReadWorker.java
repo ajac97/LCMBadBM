@@ -56,10 +56,10 @@ public class ReadWorker implements WorkerInterface {
             }
         }
 
-        DiskRun run = new DiskRun(DiskRun.IOMode.READ, App.blockSequence);
-        run.setNumMarks(App.numOfMarks);
-        run.setNumBlocks(App.numOfBlocks);
-        run.setBlockSize(App.blockSizeKb);
+        DiskRun run = new DiskRun(DiskRun.IOMode.READ, sequence);
+        run.setNumMarks(numOfMarks);
+        run.setNumBlocks(numOfBlocks);
+        run.setBlockSize(blockSizeKb);
         run.setTxSize(App.targetTxSizeKb());
         run.setDiskInfo(Util.getDiskInfo(dataDir));
 
@@ -68,7 +68,7 @@ public class ReadWorker implements WorkerInterface {
         Gui.chartPanel.getChart().getTitle().setVisible(true);
         Gui.chartPanel.getChart().getTitle().setText(run.getDiskInfo());
 
-        for (int m = startFileNum; m < startFileNum + App.numOfMarks && !up.isTaskCancelled(); m++) {
+        for (int m = startFileNum; m < startFileNum + numOfMarks && !up.isTaskCancelled(); m++) {
 
             if (App.multiFile) {
                 testFile = new File(dataDir.getAbsolutePath()
@@ -82,7 +82,7 @@ public class ReadWorker implements WorkerInterface {
             try {
                 try (RandomAccessFile rAccFile = new RandomAccessFile(testFile, "r")) {
                     for (int b = 0; b < numOfBlocks; b++) {
-                        if (App.blockSequence == DiskRun.BlockSequence.RANDOM) {
+                        if (sequence == DiskRun.BlockSequence.RANDOM) {
                             int rLoc = Util.randInt(0, numOfBlocks - 1);
                             rAccFile.seek((long) rLoc * blockSize);
                         } else {
