@@ -21,6 +21,11 @@ import static edu.touro.mco152.bm.App.*;
 import static edu.touro.mco152.bm.App.msg;
 import static edu.touro.mco152.bm.DiskMark.MarkType.WRITE;
 
+/**
+ * This is a concrete implementation of the WorkerInterface.
+ * It acts as a receiver for the WriteCommand class. It actually does the write benchmark.
+ */
+
 public class WriteWorker implements WorkerInterface{
 
     private int numOfMarks;
@@ -36,6 +41,10 @@ public class WriteWorker implements WorkerInterface{
         this.sequence = sequence;
         this.up = up;
     }
+
+    /**
+     * This method does the write benchmark and is called by the WriteCommand
+     */
 
     public void doWork(){
         System.out.println("here");
@@ -58,9 +67,9 @@ public class WriteWorker implements WorkerInterface{
 
         int startFileNum = App.nextMarkNumber;
         DiskRun run = new DiskRun(DiskRun.IOMode.WRITE, App.blockSequence);
-        run.setNumMarks(App.numOfMarks);
-        run.setNumBlocks(App.numOfBlocks);
-        run.setBlockSize(App.blockSizeKb);
+        run.setNumMarks(numOfMarks);
+        run.setNumBlocks(numOfBlocks);
+        run.setBlockSize(blockSizeKb);
         run.setTxSize(App.targetTxSizeKb());
         run.setDiskInfo(Util.getDiskInfo(dataDir));
 
@@ -80,7 +89,7 @@ public class WriteWorker implements WorkerInterface{
               that keeps writing data (in its own loop - for specified # of blocks). Each 'Mark' is timed
               and is reported to the GUI for display as each Mark completes.
              */
-        for (int m = startFileNum; m < startFileNum + App.numOfMarks && !up.isTaskCancelled(); m++) {
+        for (int m = startFileNum; m < startFileNum + numOfMarks && !up.isTaskCancelled(); m++) {
 
             if (App.multiFile) {
                 testFile = new File(dataDir.getAbsolutePath()
@@ -99,7 +108,7 @@ public class WriteWorker implements WorkerInterface{
             try {
                 try (RandomAccessFile rAccFile = new RandomAccessFile(testFile, mode)) {
                     for (int b = 0; b < numOfBlocks; b++) {
-                        if (App.blockSequence == DiskRun.BlockSequence.RANDOM) {
+                        if (sequence == DiskRun.BlockSequence.RANDOM) {
                             int rLoc = Util.randInt(0, numOfBlocks - 1);
                             rAccFile.seek((long) rLoc * blockSize);
                         } else {

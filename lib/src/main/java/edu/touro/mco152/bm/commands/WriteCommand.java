@@ -6,6 +6,11 @@ import edu.touro.mco152.bm.persist.DiskRun;
 import edu.touro.mco152.bm.ui.UserPlatform;
 import edu.touro.mco152.bm.workers.WriteWorker;
 
+/**
+ * This is a concrete implementation of the CommandInterface that is responsible for Write benchmarks.\
+ * It instantiates a WriteWorker that actually does the Write Benchmark
+ */
+
 public class WriteCommand implements CommandInterface {
     private int numOfMarks;
     private int numOfBlocks;

@@ -54,6 +54,9 @@ public class DiskWorker {
     }
 
 
+    /**
+     * This method instantiates commands in compliance with the Command pattern, and hands them to an invoker
+     */
     private void getCommands(){
         if(readTest)
             invoker.addCommand(new ReadCommand(numOfMarks, numOfBlocks, blockSizeKb, blockSequence, up));
@@ -61,7 +64,12 @@ public class DiskWorker {
             invoker.addCommand(new WriteCommand(numOfMarks, numOfBlocks, blockSizeKb, blockSequence, up));
     }
 
-
+    /**
+     *
+     * @return
+     * @throws Exception
+     * This method gets the commands, and calls the invokers invoke method to make sure the commands are executed
+     */
     public Boolean runTests() throws Exception {
 
         /*

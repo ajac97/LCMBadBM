@@ -4,6 +4,10 @@ import edu.touro.mco152.bm.persist.DiskRun;
 import edu.touro.mco152.bm.ui.UserPlatform;
 import edu.touro.mco152.bm.workers.ReadWorker;
 
+/**
+ * This is a concrete implementation of the CommandInterface interface that will act as a Read benchmark
+ */
+
 public class ReadCommand implements CommandInterface{
     private int numOfMarks;
     private int numOfBlocks;
@@ -17,6 +21,11 @@ public class ReadCommand implements CommandInterface{
         this.sequence = sequence;
         this.up = up;
     }
+
+    /**
+     * This method overrides the execute method from the CommandInterface and executes a ReadCommand by instantiating
+     * a ReadWorker class that will actually do the Read benchmark.
+     */
 
     @Override
     public void execute() {
