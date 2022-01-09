@@ -21,6 +21,8 @@ sourceSets  {
 }
 
 dependencies {
+    //SlackManager
+    implementation group: 'com.slack.api', name: 'slack-api-client', version: '1.16.0'
     // Use JUnit Jupiter for testing.
     testImplementation 'org.junit.jupiter:junit-jupiter:5.7.2'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
