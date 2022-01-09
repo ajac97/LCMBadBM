@@ -63,7 +63,7 @@ public class ReadWorker implements WorkerInterface {
             }
         }
 
-        DiskRun run = new DiskRun(DiskRun.IOMode.READ, App.blockSequence);
+        DiskRun run = new DiskRun(DiskRun.IOMode.READ, sequence);
         run.setNumMarks(numOfMarks);
         run.setNumBlocks(numOfBlocks);
         run.setBlockSize(blockSizeKb);

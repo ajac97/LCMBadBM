@@ -66,7 +66,7 @@ public class WriteWorker implements WorkerInterface{
         DiskMark wMark;  // declare vars that will point to objects used to pass progress to UI
 
         int startFileNum = App.nextMarkNumber;
-        DiskRun run = new DiskRun(DiskRun.IOMode.WRITE, App.blockSequence);
+        DiskRun run = new DiskRun(DiskRun.IOMode.WRITE, sequence);
         run.setNumMarks(numOfMarks);
         run.setNumBlocks(numOfBlocks);
         run.setBlockSize(blockSizeKb);
