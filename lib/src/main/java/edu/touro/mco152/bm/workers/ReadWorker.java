@@ -3,6 +3,8 @@ package edu.touro.mco152.bm.workers;
 import edu.touro.mco152.bm.App;
 import edu.touro.mco152.bm.DiskMark;
 import edu.touro.mco152.bm.Util;
+import edu.touro.mco152.bm.observers.Observable;
+import edu.touro.mco152.bm.observers.Observer;
 import edu.touro.mco152.bm.persist.DiskRun;
 import edu.touro.mco152.bm.persist.EM;
 import edu.touro.mco152.bm.ui.Gui;
@@ -13,7 +15,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -21,7 +25,7 @@ import static edu.touro.mco152.bm.App.*;
 import static edu.touro.mco152.bm.App.msg;
 import static edu.touro.mco152.bm.DiskMark.MarkType.READ;
 
-public class ReadWorker implements WorkerInterface {
+public class ReadWorker implements WorkerInterface, Observable {
 
     private int numOfMarks;
     private int numOfBlocks;
@@ -30,6 +34,8 @@ public class ReadWorker implements WorkerInterface {
     private UserPlatform up;
     DiskMark rMark;
     int startFileNum = App.nextMarkNumber;
+    private final List<Observer> observers = new ArrayList<>();
+    private DiskRun run;
 
     public ReadWorker(int numOfMarks, int numOfBlocks, int blockSizeKb, DiskRun.BlockSequence sequence, UserPlatform up){
         this.numOfMarks = numOfMarks;
@@ -56,7 +62,7 @@ public class ReadWorker implements WorkerInterface {
             }
         }
 
-        DiskRun run = new DiskRun(DiskRun.IOMode.READ, sequence);
+        run = new DiskRun(DiskRun.IOMode.READ, sequence);
         run.setNumMarks(numOfMarks);
         run.setNumBlocks(numOfBlocks);
         run.setBlockSize(blockSizeKb);
@@ -114,12 +120,24 @@ public class ReadWorker implements WorkerInterface {
             run.setEndTime(new Date());
         }
 
-        EntityManager em = EM.getEntityManager();
-        em.getTransaction().begin();
-        em.persist(run);
-        em.getTransaction().commit();
-
-        Gui.runPanel.addRun(run);
+        notifyObservers();
     }
 
+    @Override
+    public void registerObserver(Observer observer) {
+        observers.add(observer);
+
+    }
+
+    @Override
+    public void removeObserver(Observer observer) {
+        observers.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers() {
+        for (Observer o : observers) {
+            o.update(run);
+        }
+    }
 }

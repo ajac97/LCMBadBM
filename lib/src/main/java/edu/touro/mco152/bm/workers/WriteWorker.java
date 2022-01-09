@@ -3,16 +3,21 @@ package edu.touro.mco152.bm.workers;
 import edu.touro.mco152.bm.App;
 import edu.touro.mco152.bm.DiskMark;
 import edu.touro.mco152.bm.Util;
+import edu.touro.mco152.bm.observers.Observable;
+import edu.touro.mco152.bm.observers.Observer;
+import edu.touro.mco152.bm.persist.DatabaseUpdater;
 import edu.touro.mco152.bm.persist.DiskRun;
 import edu.touro.mco152.bm.persist.EM;
 import edu.touro.mco152.bm.ui.Gui;
 import edu.touro.mco152.bm.ui.UserPlatform;
 import jakarta.persistence.EntityManager;
+import org.checkerframework.checker.units.qual.A;
 import org.w3c.dom.UserDataHandler;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,13 +26,16 @@ import static edu.touro.mco152.bm.App.*;
 import static edu.touro.mco152.bm.App.msg;
 import static edu.touro.mco152.bm.DiskMark.MarkType.WRITE;
 
-public class WriteWorker implements WorkerInterface{
+public class WriteWorker implements WorkerInterface, Observable {
 
     private int numOfMarks;
     private int numOfBlocks;
     private int blockSizeKb;
     private DiskRun.BlockSequence sequence;
     private UserPlatform up;
+    private final ArrayList<Observer> observers = new ArrayList<>();
+    private final DiskRun run = new DiskRun(DiskRun.IOMode.WRITE, sequence);
+
 
     public WriteWorker(int numOfMarks, int numOfBlocks, int blockSizeKb, DiskRun.BlockSequence sequence, UserPlatform up){
         this.numOfMarks = numOfMarks;
@@ -56,7 +64,7 @@ public class WriteWorker implements WorkerInterface{
         DiskMark wMark;  // declare vars that will point to objects used to pass progress to UI
 
         int startFileNum = App.nextMarkNumber;
-        DiskRun run = new DiskRun(DiskRun.IOMode.WRITE, sequence);
+
         run.setNumMarks(numOfMarks);
         run.setNumBlocks(numOfBlocks);
         run.setBlockSize(blockSizeKb);
@@ -147,13 +155,25 @@ public class WriteWorker implements WorkerInterface{
             /*
               Persist info about the Write BM Run (e.g. into Derby Database) and add it to a GUI panel
              */
-        EntityManager em = EM.getEntityManager();
-        em.getTransaction().begin();
-        em.persist(run);
-        em.getTransaction().commit();
+        notifyObservers();
 
-        Gui.runPanel.addRun(run);
 
     }
 
+    @Override
+    public void registerObserver(Observer observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void removeObserver(Observer observer) {
+        observers.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers() {
+        for (Observer o : observers) {
+            o.update(run);
+        }
+    }
 }

@@ -2,25 +2,17 @@ package edu.touro.mco152.bm;
 
 import edu.touro.mco152.bm.commands.ReadCommand;
 import edu.touro.mco152.bm.commands.WriteCommand;
-import edu.touro.mco152.bm.persist.DiskRun;
-import edu.touro.mco152.bm.persist.EM;
+import edu.touro.mco152.bm.persist.DatabaseUpdater;
 import edu.touro.mco152.bm.ui.Gui;
 
 import edu.touro.mco152.bm.ui.UserPlatform;
-import jakarta.persistence.EntityManager;
+import edu.touro.mco152.bm.workers.ReadWorker;
+import edu.touro.mco152.bm.workers.WriteWorker;
+import edu.touro.mco152.bm.workers.notifications.NotificationRulesObserver;
+
 import javax.swing.*;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.util.Date;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static edu.touro.mco152.bm.App.*;
-import static edu.touro.mco152.bm.DiskMark.MarkType.READ;
-import static edu.touro.mco152.bm.DiskMark.MarkType.WRITE;
 
 /**
  * Run the disk benchmarking as a Swing-compliant thread (only one of these threads can run at
@@ -48,20 +40,36 @@ public class DiskWorker {
 
     private UserPlatform up;
     private final Invoker invoker = new Invoker();
-
     public DiskWorker(UserPlatform up){
         this.up = up;
     }
 
 
-    private void getCommands(){
-        if(readTest)
-            invoker.addCommand(new ReadCommand(numOfMarks, numOfBlocks, blockSizeKb, blockSequence, up));
-        if(writeTest)
-            invoker.addCommand(new WriteCommand(numOfMarks, numOfBlocks, blockSizeKb, blockSequence, up));
+    private void initializeCommands(){
+        if(readTest) {
+            ReadCommand rc = new ReadCommand(numOfMarks, numOfBlocks, blockSizeKb, blockSequence, up);
+            invoker.addCommand(rc);
+            registerReadObservers(rc);
+        }
+        if(writeTest) {
+            WriteCommand wc = new WriteCommand(numOfMarks, numOfBlocks, blockSizeKb, blockSequence, up);
+            invoker.addCommand(wc);
+            registerWriteObservers(wc);
+        }
     }
 
+    private void registerWriteObservers(WriteCommand wc){
+        WriteWorker ww = wc.getWorker();
+        ww.registerObserver(new DatabaseUpdater());
+        ww.registerObserver(new Gui());
+    }
 
+    public void registerReadObservers(ReadCommand rc){
+        ReadWorker rw = rc.getWorker();
+        rw.registerObserver(new DatabaseUpdater());
+        rw.registerObserver(new Gui());
+        rw.registerObserver(new NotificationRulesObserver());
+    }
     public Boolean runTests() throws Exception {
 
         /*
@@ -73,7 +81,7 @@ public class DiskWorker {
          */
         System.out.println("*** starting new worker thread");
 
-        getCommands();
+        initializeCommands();
         invoker.invoke();
         Gui.updateLegend();  // init chart legend info
 
@@ -108,10 +116,5 @@ public class DiskWorker {
         App.nextMarkNumber += App.numOfMarks;
         return true;
     }
-
-
-
-
-
 
 }
