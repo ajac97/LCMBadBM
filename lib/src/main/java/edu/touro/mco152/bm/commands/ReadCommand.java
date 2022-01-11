@@ -14,7 +14,7 @@ public class ReadCommand implements CommandInterface{
     private int blockSizeKb;
     private DiskRun.BlockSequence sequence;
     private UserPlatform up;
-    public ReadCommand(int numOfMarks, int numOfBlocks, int blockSizeKb, DiskRun.BlockSequence blockSequence, UserPlatform up) {
+    public ReadCommand(int numOfMarks, int numOfBlocks, int blockSizeKb, DiskRun.BlockSequence sequence, UserPlatform up) {
         this.numOfMarks = numOfMarks;
         this.numOfBlocks = numOfBlocks;
         this.blockSizeKb = blockSizeKb;
