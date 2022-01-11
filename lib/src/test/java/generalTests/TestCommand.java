@@ -29,6 +29,10 @@ public class TestCommand implements UserPlatform {
     private final List<DiskMark> diskMarks = new ArrayList();
     private final Invoker testInvoker = new Invoker();
     private int latestProgressReport;
+    private final int MARKS = 25;
+    private final int BLOCKS = 128;
+    private final int BLOCKSIZEKB = 2048;
+    private final BlockSequence SEQUENCE = BlockSequence.SEQUENTIAL;
 
     /**
      * this method executes a read command and checks to make sure it runs to completion
@@ -36,7 +40,7 @@ public class TestCommand implements UserPlatform {
 
     @Test
     public void testReadCommand() {
-        this.testInvoker.addCommand(new ReadCommand(25, 128, 512, BlockSequence.SEQUENTIAL, this));
+        this.testInvoker.addCommand(new ReadCommand(MARKS, BLOCKS, BLOCKSIZEKB, SEQUENCE, this));
         this.testInvoker.invoke();
         Assertions.assertEquals(100, this.latestProgressReport);
     }
@@ -46,7 +50,7 @@ public class TestCommand implements UserPlatform {
      */
     @Test
     public void testWriteCommand() {
-        this.testInvoker.addCommand(new WriteCommand(25, 128, 512, BlockSequence.SEQUENTIAL, this));
+        this.testInvoker.addCommand(new WriteCommand(MARKS, BLOCKS, BLOCKSIZEKB, SEQUENCE, this));
         this.testInvoker.invoke();
         Assertions.assertEquals(100, this.latestProgressReport);
     }
