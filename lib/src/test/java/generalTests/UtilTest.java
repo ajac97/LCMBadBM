@@ -1,3 +1,5 @@
+package generalTests;
+
 import edu.touro.mco152.bm.Util;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
