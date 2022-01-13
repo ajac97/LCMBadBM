@@ -4,6 +4,10 @@ import edu.touro.mco152.bm.SlackManager;
 import edu.touro.mco152.bm.observers.Observer;
 import edu.touro.mco152.bm.persist.DiskRun;
 
+/**
+ * This class is a concrete implementation of Observer interface that uses the slack manager class to send a message
+ * based on certain criteria.
+ */
 public class NotificationRulesObserver implements Observer {
     @Override
     public void update() {
@@ -14,7 +18,7 @@ public class NotificationRulesObserver implements Observer {
     public void update(Object o) {
         if(o instanceof DiskRun){
             DiskRun dr = (DiskRun) o;
-            if(isRunGreaterThanThreshold(dr)) {
+            if(getPercentOfMaxOverAvg(dr) > 3) {
                sendMessage();
             }
         }
@@ -22,10 +26,10 @@ public class NotificationRulesObserver implements Observer {
 
     private void sendMessage() {
         SlackManager slackManager = new SlackManager("Benchmark");
-        slackManager.postMsg2OurChannel(" The Read Benchmark has a 'max time' that exceeds 3 percent of the benchmarks's average time.");
+        slackManager.postMsg2OurChannel("The Read Benchmark has a 'max time' that exceeds 3 percent of the benchmarks's average time.");
     }
 
-    private boolean isRunGreaterThanThreshold(DiskRun dr) {
-        return (dr.getRunMax() - dr.getRunAvg()) > (dr.getRunAvg() * .03); //max = 1700 avg = 1650
+    private double getPercentOfMaxOverAvg(DiskRun dr) {
+        return 100 - ((dr.getRunAvg()/ dr.getRunAvg()) * 100);
     }
 }

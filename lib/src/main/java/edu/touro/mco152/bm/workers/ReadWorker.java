@@ -6,13 +6,10 @@ import edu.touro.mco152.bm.Util;
 import edu.touro.mco152.bm.observers.Observable;
 import edu.touro.mco152.bm.observers.Observer;
 import edu.touro.mco152.bm.persist.DiskRun;
-import edu.touro.mco152.bm.persist.EM;
 import edu.touro.mco152.bm.ui.Gui;
 import edu.touro.mco152.bm.ui.UserPlatform;
-import jakarta.persistence.EntityManager;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
@@ -22,8 +19,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static edu.touro.mco152.bm.App.*;
-import static edu.touro.mco152.bm.App.msg;
 import static edu.touro.mco152.bm.DiskMark.MarkType.READ;
+
+/**
+ * Concrete implementation of Observable interface. Executes a read command and notifies all observers of results at the end.
+ */
 
 public class ReadWorker implements WorkerInterface, Observable {
 

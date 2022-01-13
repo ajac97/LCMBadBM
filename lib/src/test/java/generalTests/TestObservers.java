@@ -3,18 +3,13 @@ package generalTests;
 import edu.touro.mco152.bm.App;
 import edu.touro.mco152.bm.DiskMark;
 import edu.touro.mco152.bm.DiskWorker;
-import edu.touro.mco152.bm.Invoker;
-import edu.touro.mco152.bm.observers.Observer;
 import edu.touro.mco152.bm.persist.DiskRun;
-import edu.touro.mco152.bm.persist.EM;
 import edu.touro.mco152.bm.ui.Gui;
 import edu.touro.mco152.bm.ui.MainFrame;
 import edu.touro.mco152.bm.ui.UserPlatform;
 import edu.touro.mco152.bm.workers.ReadWorker;
 import edu.touro.mco152.bm.workers.WriteWorker;
-import jakarta.persistence.EntityManager;
-import org.eclipse.persistence.jpa.jpql.Assert;
-import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -23,12 +18,18 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.Properties;
 
-
+/**
+ * This is a test class that is used to test compliance with the Observer pattern. Utilizes a mock observer to see if Observables
+ * in fact notify the observers.
+ */
 public class TestObservers implements UserPlatform {
 
     private static MockObserver mock;
 
 
+    /**
+     * Simulates an observer being notified by a ReadWorker(Observable)
+     */
     @Test
     public void testReadBenchmark(){
         ReadWorker rw = new ReadWorker(25, 32, 128, DiskRun.BlockSequence.SEQUENTIAL, this);
@@ -37,6 +38,9 @@ public class TestObservers implements UserPlatform {
         rw.doWork();
     }
 
+    /**
+     * Simulates an observer being notified by a WriteWorker(Observable)
+     */
     @Test
     public void testWriteBenchmark(){
         WriteWorker ww = new WriteWorker(25, 32, 128, DiskRun.BlockSequence.SEQUENTIAL, this);
@@ -45,9 +49,13 @@ public class TestObservers implements UserPlatform {
         ww.doWork();
     }
 
-    @AfterAll
+    /**
+     * This method tests to see if in fact the update method in the mock observer was called.
+     * It is called after each test method is executed.
+     */
+    @AfterEach
     @Test
-    public static void testObserverWasCalled(){
+    public void testObserverWasCalled(){
         Assertions.assertTrue(mock.getWasCalled());
     }
 

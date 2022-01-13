@@ -2,7 +2,6 @@ package generalTests;
 
 import edu.touro.mco152.bm.persist.EM;
 import jakarta.persistence.EntityManager;
-import org.eclipse.persistence.jpa.jpql.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

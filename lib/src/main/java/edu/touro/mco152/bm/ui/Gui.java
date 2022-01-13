@@ -21,6 +21,10 @@ import java.text.NumberFormat;
 /**
  * Store gui references for easy access
  */
+
+/**
+ *Concrete implementation of Observer interface. Will cause the gui to update based on read or write commands
+ */
 public final class Gui implements Observer {
 
     public static ChartPanel chartPanel = null;
@@ -146,7 +150,10 @@ public final class Gui implements Observer {
     public void update() {
 
     }
-
+    /**
+     * this is called by notifyObservers in an Observable class in which this class is registered.
+     * @param o
+     */
     @Override
     public void update(Object o) {
 

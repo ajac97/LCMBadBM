@@ -1,17 +1,13 @@
 package edu.touro.mco152.bm;
-
 import edu.touro.mco152.bm.commands.ReadCommand;
 import edu.touro.mco152.bm.commands.WriteCommand;
 import edu.touro.mco152.bm.persist.DatabaseUpdater;
 import edu.touro.mco152.bm.ui.Gui;
-
 import edu.touro.mco152.bm.ui.UserPlatform;
 import edu.touro.mco152.bm.workers.ReadWorker;
 import edu.touro.mco152.bm.workers.WriteWorker;
 import edu.touro.mco152.bm.workers.notifications.NotificationRulesObserver;
-
 import javax.swing.*;
-
 import static edu.touro.mco152.bm.App.*;
 
 /**
@@ -44,7 +40,9 @@ public class DiskWorker {
         this.up = up;
     }
 
-
+    /**
+     * Refactored initialize commands to pass the command to the register observers methods
+     */
     private void initializeCommands(){
         if(readTest) {
             ReadCommand rc = new ReadCommand(numOfMarks, numOfBlocks, blockSizeKb, blockSequence, up);
@@ -58,12 +56,19 @@ public class DiskWorker {
         }
     }
 
+    /**
+     * This method takes a write command, gets the worker and registers the observers to the receiver of the write command.
+     * @param wc
+     */
     private void registerWriteObservers(WriteCommand wc){
         WriteWorker ww = wc.getWorker();
         ww.registerObserver(new DatabaseUpdater());
         ww.registerObserver(new Gui());
     }
-
+    /**
+     * This method takes a write command, gets the worker and registers the observers to the receiver of the read command.
+     * @param rc
+     */
     public void registerReadObservers(ReadCommand rc){
         ReadWorker rw = rc.getWorker();
         rw.registerObserver(new DatabaseUpdater());
