@@ -2,8 +2,10 @@ package edu.touro.mco152.bm;
 
 import edu.touro.mco152.bm.commands.CommandInterface;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 
 /**
  * This class is an invoker for the instances of the CommandInterface.
@@ -13,7 +15,7 @@ import java.util.List;
 
 public class Invoker {
 
-    private final List<CommandInterface> toCommand = new ArrayList<>();
+    private final Queue<CommandInterface> toCommand = new ArrayDeque<>();
 
     public void invoke(){
 
